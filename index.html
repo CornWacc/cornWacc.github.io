@@ -1,170 +1,220 @@
-<!DOCTYPE html>
-<html>
 
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta name="theme-color" content="#33474d">
-	<title>CornWacc`s Blog</title>
-	<link rel="stylesheet" href="/css/style.css">
-	
-      <link rel="alternate" href="/atom.xml" title="CornWacc`s Blog" type="application/atom+xml">
-    
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="author" content="Corn">
+  
+  
+  
+  
+    <meta name="description" content>
+  
+  <title>为之努力。 [ CornWacc`s Blog ]</title>
+  
+  
+    <link rel="shortcut icon" href="/hollow.ico">
+  
+  
+  <link rel="stylesheet" href="/css/random.css">
+<link rel="stylesheet" href="/css/vegas.min.css">
+<link rel="stylesheet" href="/css/highlight-railscasts.css">
+<link rel="stylesheet" href="/css/jquery.fancybox.css">
+<link rel="stylesheet" href="/css/iconfont/iconfont.css">
+<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
+<link rel="stylesheet" href="/css/plyr.css">
+  
 </head>
 
-<body>
-
-	<header class="header">
-		<nav class="header__nav">
-			
-		</nav>
-		<h1 class="header__title"><a href="/">CornWacc`s Blog</a></h1>
-		<h2 class="header__subtitle">为之努力。</h2>
-	</header>
-
-	<main>
-		
-
-
-
-	<article>
-	
-		<h1><a href="/2019/03/27/ThreadPool`s Study/">Netty`s Study</a></h1>
-	
-	<div class="article__infos">
-		<span class="article__date">2019-03-27</span><br>
-		
-		
-	</div>
-
-	
-
-	
-		
-	
-
-	
-
-</article>
-
-
-
-
-	<article>
-	
-		<h1><a href="/2019/03/26/Netty`s Study/">Netty`s Study</a></h1>
-	
-	<div class="article__infos">
-		<span class="article__date">2019-03-26</span><br>
-		
-		
-	</div>
-
-	
-
-	
-		<h1 id="1-Netty是什么"><a href="#1-Netty是什么" class="headerlink" title="1.Netty是什么"></a>1.Netty是什么</h1><h3 id="Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。"><a href="#Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。" class="headerlink" title="Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。"></a>Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。</h3><hr>
-<h1 id="2-为什么不用原生自带的NIO"><a href="#2-为什么不用原生自带的NIO" class="headerlink" title="2.为什么不用原生自带的NIO"></a>2.为什么不用原生自带的NIO</h1><pre><code>1.使用JDK自带的NIO需要了解太多的概念,编程复杂。
-
-2.Netty底层的IO模型随意切换。
-
-3.Netty自带拆包解包,异常监测
-
-4.Netty解决了很逗JDK包括空轮询的Bug
-
-5.自带各种协议栈
-
-6.Netty底层对线程,selector做了很多细小的优化,精心设计的reactor线程模型做到非常高效的并发处理
-
-7.Netty的健壮性非常强大
-</code></pre><hr>
-<h1 id="3-Netty实现服务端"><a href="#3-Netty实现服务端" class="headerlink" title="3.Netty实现服务端"></a>3.Netty实现服务端</h1><p><figure class="figure"><img src="https://s2.ax1x.com/2019/03/27/AalVwF.jpg" alt></figure></p>
-<h2 id="3-1-启动流程"><a href="#3-1-启动流程" class="headerlink" title="3.1.启动流程"></a>3.1.启动流程</h2><pre><code>1).首先创建了两个NioEventLoogGroup,这两个对象可以看做是传统IO变成模型的两个线程组,boss表示端口监听,worker表示处理每一条连接数据的读写的线程组。
-
-2).ServerBootStrap:引导类,这个类将引导我们进行服务端的启动工作
-
-3). .group是给引导类配置两大线程组,这样引导类的线程模型也就定型了
-
-4). .channel(指定IO模型):
-    NioServerSocketChannel Nio模型
-    OioServerSocketChannel Bio模型
-
-5). .childHandler方法:给引导类创建一个ChannelInitializer用于定义后续每条连接的数据读写,业务处理逻辑。
-    ChannelInitializer:这个类中需定义一个泛型参数,为定义主通道处理器,对Nio的连接抽象。
-
-6).最后操作时可以绑定端口号:serverBootstrap.bind(自定义端口号),此方法是异步的。可以拓展为端口递增绑定
-
-7). 附上(Bio引导设置):
-</code></pre><p><figure class="figure"><img src="https://s2.ax1x.com/2019/03/27/Aa1BC9.jpg" alt></figure></p>
-<h2 id="3-2-总结-要启动一个Netty服务端必须要指定三类属性"><a href="#3-2-总结-要启动一个Netty服务端必须要指定三类属性" class="headerlink" title="3.2.总结:要启动一个Netty服务端必须要指定三类属性"></a>3.2.总结:要启动一个Netty服务端必须要指定三类属性</h2><pre><code>1.线程模型(监听线程组,读写处理逻辑线程组)
-2.IO模型(Nio,Bio)
-3.连续读写处理逻辑
-</code></pre><hr>
-<h1 id="4-Netty实现客户端"><a href="#4-Netty实现客户端" class="headerlink" title="4.Netty实现客户端"></a>4.Netty实现客户端</h1><p><figure class="figure"><img src="https://s2.ax1x.com/2019/03/27/Aa3Rs0.jpg" alt></figure></p>
-<h2 id="4-1-启动流程"><a href="#4-1-启动流程" class="headerlink" title="4.1.启动流程"></a>4.1.启动流程</h2><pre><code>1.和服务端启动类似(定义线程组,定义io模型,定义io处理模型处理逻辑)
-
-2.Bootstrap:客户端的引导类负责客户端以及连接服务端
-
-3.connect方法:用于连接,这个方法有两个参数(Ip/域名,端口号),这个方法也是一个异步。可以通过addListener方法监听连接是否成功。
-</code></pre><hr>
-<h1 id="5-Netty实现双向通信"><a href="#5-Netty实现双向通信" class="headerlink" title="5.Netty实现双向通信"></a>5.Netty实现双向通信</h1><pre><code>1.上述已经讲了Netty怎么实现两个端的建立,需要实现两端通信则只需要在IO读写逻辑(ChannelInitializer)中进行相关的逻辑操作。
-</code></pre><h2 id="5-1-服务端读取写入"><a href="#5-1-服务端读取写入" class="headerlink" title="5.1 服务端读取写入"></a>5.1 服务端读取写入</h2><p><figure class="figure"><img src="https://s2.ax1x.com/2019/03/27/AavCZD.jpg" alt="&quot;&quot;"><figcaption class="figure__caption">&quot;&quot;</figcaption></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 服务端自定义逻辑处理器</span><br><span class="line"> * 1.需继承实现了ChannelHandler该接口的类,此处运用的是ChannelInboundHandlerAdapter</span><br><span class="line"> *</span><br><span class="line"> * 方法解释：</span><br><span class="line"> * 1.channelRead:该方法是在接收到客户端发来的数据后被回调</span><br><span class="line"> * 2.writeAndFlush:写出二进制</span><br><span class="line"> * */</span><br><span class="line"></span><br><span class="line">public class FirstServerHandler extends ChannelInboundHandlerAdapter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext channelHandlerContext, Object s)&#123;</span><br><span class="line">        //读取客户端信息</span><br><span class="line">        System.out.println(&quot;接受到客户端消息:&quot;+new Date()+&quot;:&quot;+s);</span><br><span class="line"></span><br><span class="line">        //写出数据</span><br><span class="line">        System.out.println(new Date()+&quot;服务端写出数据:&quot;);</span><br><span class="line">        ByteBuf byteBuf = getByteBuf(channelHandlerContext);</span><br><span class="line"></span><br><span class="line">        //数据写出</span><br><span class="line">        channelHandlerContext.writeAndFlush(byteBuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ByteBuf getByteBuf(ChannelHandlerContext ctx)&#123;</span><br><span class="line">        //获取ByteBuf抽象,生成一个ByteBuf</span><br><span class="line">        ByteBuf byteBuf = ctx.alloc().buffer();</span><br><span class="line"></span><br><span class="line">        try&#123;</span><br><span class="line">            byte[] bytes = &quot;欢迎连接!&quot;.getBytes(&quot;utf-8&quot;);</span><br><span class="line">            //填充ByteBuf</span><br><span class="line">            byteBuf.writeBytes(bytes);</span><br><span class="line">        &#125;catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return byteBuf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="5-2-客户端读取写入"><a href="#5-2-客户端读取写入" class="headerlink" title="5.2 客户端读取写入"></a>5.2 客户端读取写入</h2><p><figure class="figure"><img src="https://s2.ax1x.com/2019/03/27/AavfTe.jpg" alt="&quot;&quot;"><figcaption class="figure__caption">&quot;&quot;</figcaption></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 自定义客户端读写逻辑处理器</span><br><span class="line"> * */</span><br><span class="line">public class FirstClientHandler extends ChannelInboundHandlerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 这个方法会在客户端建立连接成功后被调用</span><br><span class="line">     * */</span><br><span class="line">    @Override</span><br><span class="line">    public void channelActive(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        System.out.println(new Date() + &quot;:客户端写出数据:&quot;);</span><br><span class="line"></span><br><span class="line">        //1.获取数据</span><br><span class="line">        ByteBuf byteBuf = getByteBuf(ctx);</span><br><span class="line"></span><br><span class="line">        //2.写出</span><br><span class="line">        ctx.channel().writeAndFlush(byteBuf);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(&quot;获取到服务器端信息:&quot;+byteBuf.toString(Charset.forName(&quot;UTF-8&quot;)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ByteBuf getByteBuf(ChannelHandlerContext ctx) throws UnsupportedEncodingException &#123;</span><br><span class="line">        //1.获取二进制抽象 ByteBuf ctx.alloc方法是获取一个ByteBuf的内存管理器</span><br><span class="line">        ByteBuf byteBuf = ctx.alloc().buffer();</span><br><span class="line"></span><br><span class="line">        //2.准备数据,指定字符串的字符集为UTF-8</span><br><span class="line">        byte[] bytes = &quot;你好&quot;.getBytes(&quot;UTF-8&quot;);</span><br><span class="line"></span><br><span class="line">        //3.填充数据到 ByteBuf</span><br><span class="line">        byteBuf.writeBytes(bytes);</span><br><span class="line"></span><br><span class="line">        return byteBuf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h1><pre><code>1.在客户端和服务端的逻辑处理都是在启动的时候,通过给逻辑处理链pipeline添加逻辑处理器,用于便携数据的读写逻辑。
-
-2.在客户端连接成功后回调逻辑处理器的channelActive()方法。
-
-3.无论是服务端还是客户端收到数据后都会调用channelRead方法。
-
-4.写数据需调用writeAndFlush方法,客户端与服务端交互的二进制数据载体为ByteBuf,ByteBuf通过连接的内存管理器创建,字节数据填充到ByteBuf之后才能写到对端。
-</code></pre>
-	
-
-	
-
-</article>
-
-
-
-
-
-
-	<span class="different-posts">📕 end of posts 📕</span>
-
-
-	</main>
-
-	<footer class="footer">
-	<div class="footer-content">
-		
-	      <div class="footer__element">
-
+<div class="random-center hide-area">
+  <div id="random-index">
+    <div class="center-field">
+      <img class="avatar" src="https://avatars3.githubusercontent.com/u/13285397?s=460&v=4" width="120" height="120" onclick="openUserCard()">
+    </div>
+    <div class="center-field">
+      <div class="title" onclick="openUserCard()">CornWacc`s Blog</div>
+      <div class="sub-title" onclick="openUserCard()">为之努力。</div>
+    </div>
+    <hr>
+    <div class="center-field">
+      <ul class="index-nav-link">
+        
+        
+          
+            <li><a href="/index.html">Home</a></li>
+          
+        
+          
+            <li><a href="/archives">Archives</a></li>
+          
+        
+          
+            <li><a href="https://github.com/CornWacc">Github</a></li>
+          
+        
+      </ul>
+      <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/CornWacc">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+    <li>
+      <a href="791621554@qq.com">
+        
+          Meil
+        
+      </a>
+    </li>
+  
+</ul>
+    </div>
+  </div>
+</div>
+<div id="user-card">
+  <div class="center-field">
+    <img class="avatar" src="https://avatars3.githubusercontent.com/u/13285397?s=460&v=4">
+    <p id="description"></p>
+    <ul class="social-icon">
+  
+  
+    <li>
+      <a href="https://github.com/CornWacc">
+        
+          <i class="icon iconfont github">&#xe606;</i>
+        
+      </a>
+    </li>
+  
+    <li>
+      <a href="791621554@qq.com">
+        
+          Meil
+        
+      </a>
+    </li>
+  
+</ul>
+  </div>
 </div>
 
-	    
-	      <div class="footer__element">
 
-	<ul class="footer-links">
-		<li class="footer-links__link"><a href="https://github.com/CornWacc/cornWacc.github.io">gitHub</a></li>
-	</ul>
-</div>
+<div id="btn-view">Hide</div>
 
-	    
+<script>
+// is trigger analytics / tongji script
+var isIgnoreHost = false;
 
-		<div class="footer-credit">
-			<span>© 2019 Corn | Powered by <a href="https://hexo.io/">Hexo</a> | Theme <a href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
-		</div>
+if(window && window.location && window.location.host) {
+  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
+    return 0 === window.location.host.indexOf(address);
+  });
+}
 
-	</div>
+var isTriggerAnalytics = !( true && isIgnoreHost );
 
-
-</footer>
+</script>
 
 
 
-</body>
+
+  
+  
+    <script src="/js/jquery-2.2.3.min.js"></script>
+  
+    <script src="/js/vegas.min.js"></script>
+  
+    <script src="/js/random.js"></script>
+  
+    <script src="/js/highlight.pack.js"></script>
+  
+    <script src="/js/jquery.mousewheel.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox.pack.js"></script>
+  
+    <script src="/js/jquery.fancybox-thumbs.js"></script>
+  
+    <script src="/js/plyr.js"></script>
+  
+
+<script>
+
+  // fancybox
+  var backgroundImages = [];
+  
+  $('#post').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
+      var alt = this.alt || this.title;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'post' + i);
+    });
+  });
+  $(".fancybox").fancybox();
+
+var vegasConfig = {"preload­Image":true,"transition":["flash"],"timer":true,"delay":1500000,"shuffle":true,"count":12};
+var unsplashConfig = {"gravity":"center"};
+// is show background images
+var turnoffBackgroundImage = false;
+
+
+
+
+var backgroundColor = "34495E";
+
+$(".fancybox-thumb").fancybox({
+  prevEffect: 'none',
+  nextEffect: 'none',
+  helpers: {
+    title: {
+      type: 'outside'
+    },
+    thumbs: {
+      width: 50,
+      height: 50
+    }
+  }
+});
+
+// show video with plyr
+$(".video-container iframe").each(function(i){
+  var url = $(this).attr('src');
+  var id = url.split('/').pop();
+  var plyrContainer = document.createElement('div');
+  plyrContainer.className = 'plyr';
+  var plyrElement = document.createElement('div');
+  plyrElement.dataset.videoId = id;
+  switch(true) {
+    case url.search('youtube.com') >= 0:
+      plyrElement.dataset.type = 'youtube';
+      break;
+    case url.search('vimeo.com') >= 0:
+      plyrElement.dataset.type = 'vimeo';
+      break;
+    default:
+      return;
+  };
+  plyrContainer.appendChild(plyrElement);
+  $(this).parent().html(plyrContainer);
+});
+plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
+</script>
 
 </html>
+
