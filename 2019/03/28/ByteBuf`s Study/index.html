@@ -4,112 +4,62 @@
 
 
 
-
 <!doctype html>
 <html lang="zh-CN">
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js">
+</script>
+<link href="/plugins/code-theme/tomorrow.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="/plugins/github-markdown.css">
+
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
   
-  <meta name="author" content="Corn">
-  
-  
-  
-  
-    <meta name="description" content="1.ByteBuf介绍摘抄自掘金小册 Netty入门与实战(by 闪电侠)
-1.1.ByteBuf结构1. ByteBuf是一个字节容器(有三个部分),第一个部分是已经丢弃的字节(数据是无效的),第二部分是可读字节,这部分是ByteBuf的主题数据,从ByteBuf里面读取的数据都来自这一部分。最后一部分是可写字节,所有写到ByteBuf的数据都会写到最后一段。最后虚线部分是指还可扩多少容。...">
-  
-  <title>ByteBuf`s Study [ CornWacc`s Blog ]</title>
-  
-  
-    <link rel="shortcut icon" href="/hollow.ico">
-  
-  
-  <link rel="stylesheet" href="/css/random.css">
-<link rel="stylesheet" href="/css/vegas.min.css">
-<link rel="stylesheet" href="/css/highlight-railscasts.css">
-<link rel="stylesheet" href="/css/jquery.fancybox.css">
-<link rel="stylesheet" href="/css/iconfont/iconfont.css">
-<link rel="stylesheet" href="/css/jquery.fancybox-thumbs.css">
-<link rel="stylesheet" href="/css/plyr.css">
+    
+    
+      <link rel="stylesheet" href="/css/legend.css">
+    
   
 </head>
 
-<body>
-<div class="side-navigate hide-area">
-  
-  
-    <div class="item next">
-      <a href="/2019/03/27/ThreadPool`s Study/">
-        <div class="item-icon"></div>
-      </a>
-      <div class="item-title">
-        ThreadPool`s Study
-      </div>
+<body id="body-x">
+<div id="layout-content">
+  <div id="menu-outer-x">
+  <div id="menu-inner">
+    
+    
+    <div id="site-title">
+      CornWacc`s Blog
     </div>
-  
-</div>
-<div id="outer-container" class="hide-area">
-<div id="container">
-  <div id="menu-outer" class="slide-down">
-    <div id="menu-inner">
-      <div id="brand">
-        
-        <a onclick="openUserCard()">
-          <img id="avatar" src="https://avatars3.githubusercontent.com/u/13285397?s=460&v=4">
-          <div id="homelink">CornWacc`s Blog</div>
-        </a>
-      </div>
-      <div id="menu-list">
-        <ul>
-        
-        
-          
-            <li>
-          
-            <a href="/index.html">Home</a>
-            
-          </li>
-        
-          
-            <li>
-          
-            <a href="/archives">Archives</a>
-            
-          </li>
-        
-          
-            <li>
-          
-            <a href="https://github.com/CornWacc">Github</a>
-            
-          </li>
-        
-        </ul>
-      </div>
-      <div id="show-menu">
-        <button>Menu</button>
-      </div>
+    
+
+     
+    <div>
+    
+      
+      <a href="/">Main</a>
+      
+    
+      
+      <a href="/archives">Archives</a>
+      
+    
     </div>
   </div>
-
+</div> 
   <div id="content-outer">
     <div id="content-inner">
       
       
-  
-
-  <article id="post">
-    <h1>ByteBuf`s Study</h1>
-    <p class="page-title-sub">
-      <span id="post-title-date">撰写于 2019-03-28</span>
+  <article class="markdown-body">
+    <h2 id="post-title">ByteBuf`s Study
+       
+        <div id="post-time" datetime="2019-03-28T01:04:40.000Z">
+          2019-03-28
+        </div>
       
-        <span id="post-title-updated">修改于 2019-03-28</span>
-      
-      
-      
-    </p>
-    
+    </h2>
     <h1 id="1-ByteBuf介绍"><a href="#1-ByteBuf介绍" class="headerlink" title="1.ByteBuf介绍"></a>1.ByteBuf介绍</h1><p><em>摘抄自掘金小册 Netty入门与实战(by 闪电侠)</em><br><img src="https://s2.ax1x.com/2019/03/28/Adfscd.png" alt="&quot;&quot;"></p>
 <h2 id="1-1-ByteBuf结构"><a href="#1-1-ByteBuf结构" class="headerlink" title="1.1.ByteBuf结构"></a>1.1.ByteBuf结构</h2><pre><code>1. ByteBuf是一个字节容器(有三个部分),第一个部分是已经丢弃的字节(数据是无效的),第二部分是可读字节,这部分是ByteBuf的主题数据,从ByteBuf里面读取的数据都来自这一部分。最后一部分是可写字节,所有写到ByteBuf的数据都会写到最后一段。最后虚线部分是指还可扩多少容。
 
@@ -140,180 +90,114 @@
   readBytes(byte[] red):表示把bytebuf里的字节全部读取到字节数组里。
 </code></pre>
   </article>
-  <div class="random-toc-area">
-  <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
-  <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
-  <div class="random-toc">
-    <h2>目录</h2>
-    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-ByteBuf介绍"><span class="toc-text">1.ByteBuf介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-ByteBuf结构"><span class="toc-text">1.1.ByteBuf结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-ByteBuf-Api"><span class="toc-text">1.2.ByteBuf Api</span></a></li></ol></li></ol>
-  </div>
-</div>
 
   
-<nav id="pagination">
-  
+    
+    
+      <div id="page-prev-next">
+        
+        
+          <div></div> 
+        
 
-  
-
-  
-    <a href="/2019/03/27/ThreadPool`s Study/" class="next">下一篇 ThreadPool`s Study &rarr;</a>
-  
-</nav>
-
-  <!-- JiaThis Button BEGIN -->
-
-<!-- JiaThis Button END -->
-
-
+        
+        
+          <a id="page-next-a" href="/2019/03/27/ThreadPool`s Study/"> ThreadPool`s Study → </a>
+        
+      </div>
+    
+    
+    
+    
       
-      
-    </div>
-  </div>
-
-  <div id="bottom-outer">
-    <div id="bottom-inner">
-      Site by Corn using
-      <a href="http://hexo.io">Hexo</a> & <a href="https://github.com/stiekel/hexo-theme-random">Random</a>
-      <br>
-      
-    </div>
-  </div>
+      <div id="play-button" style="background-color: gray; border: solid 2px gray;">
+  <img id="play-img" src="/images/playback_play.png">
 </div>
-
-</div>
-
-
-<div id="user-card">
-  <div class="center-field">
-    <img class="avatar" src="https://avatars3.githubusercontent.com/u/13285397?s=460&v=4">
-    <p id="description"></p>
-    <ul class="social-icon">
-  
-  
-    <li>
-      <a href="https://github.com/CornWacc">
-        
-          <i class="icon iconfont github">&#xe606;</i>
-        
-      </a>
-    </li>
-  
-    <li>
-      <a href="791621554@qq.com">
-        
-          Meil
-        
-      </a>
-    </li>
-  
-</ul>
-  </div>
-</div>
-
-
-<div id="btn-view">Hide</div>
+<audio id="bgaudio" loop="loop" preload="none"> 
+  <source src="http://cdn.calm.com/scenes/scene-Qqkzy9k7Eo.m4a?v=1418162240715" type="audio/mpeg">
+</audio>
 
 <script>
-// is trigger analytics / tongji script
-var isIgnoreHost = false;
-
-if(window && window.location && window.location.host) {
-  isIgnoreHost = ["localhost","127.0.0.1"].some(function(address){
-    return 0 === window.location.host.indexOf(address);
-  });
-}
-
-var isTriggerAnalytics = !( true && isIgnoreHost );
-
-</script>
-
-
-
-
-  
-  
-    <script src="/js/jquery-2.2.3.min.js"></script>
-  
-    <script src="/js/vegas.min.js"></script>
-  
-    <script src="/js/random.js"></script>
-  
-    <script src="/js/highlight.pack.js"></script>
-  
-    <script src="/js/jquery.mousewheel.pack.js"></script>
-  
-    <script src="/js/jquery.fancybox.pack.js"></script>
-  
-    <script src="/js/jquery.fancybox-thumbs.js"></script>
-  
-    <script src="/js/plyr.js"></script>
-  
-
-<script>
-
-  // fancybox
-  var backgroundImages = [];
-  
-  $('#post').each(function(i){
-    $(this).find('img').each(function(){
-      if ($(this).parent().hasClass('fancybox') || $(this).parent().hasClass('fancybox-thumb')) return;
-      var alt = this.alt || this.title;
-      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
-      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
-    });
-    $(this).find('.fancybox').each(function(){
-      $(this).attr('rel', 'post' + i);
-    });
-  });
-  $(".fancybox").fancybox();
-
-var vegasConfig = {"preload­Image":true,"transition":["flash"],"timer":true,"delay":1500000,"shuffle":true,"count":12};
-var unsplashConfig = {"gravity":"center"};
-// is show background images
-var turnoffBackgroundImage = false;
-
-
-
-
-var backgroundColor = "34495E";
-
-$(".fancybox-thumb").fancybox({
-  prevEffect: 'none',
-  nextEffect: 'none',
-  helpers: {
-    title: {
-      type: 'outside'
-    },
-    thumbs: {
-      width: 50,
-      height: 50
+$(document).ready(function(){
+  //播放按钮点击
+  var audio = $("#bgaudio")[0];
+  var img = $("#play-img")[0];
+  $("#play-button").click(function(){ 
+    if (audio.paused || audio.ended) {
+      audio.play();
+      img.src = "/images/playback_pause.png";
+    } else {
+      audio.pause();
+      img.src = "/images/playback_play.png";
     }
-  }
+  });
 });
-
-// show video with plyr
-$(".video-container iframe").each(function(i){
-  var url = $(this).attr('src');
-  var id = url.split('/').pop();
-  var plyrContainer = document.createElement('div');
-  plyrContainer.className = 'plyr';
-  var plyrElement = document.createElement('div');
-  plyrElement.dataset.videoId = id;
-  switch(true) {
-    case url.search('youtube.com') >= 0:
-      plyrElement.dataset.type = 'youtube';
-      break;
-    case url.search('vimeo.com') >= 0:
-      plyrElement.dataset.type = 'vimeo';
-      break;
-    default:
-      return;
-  };
-  plyrContainer.appendChild(plyrElement);
-  $(this).parent().html(plyrContainer);
-});
-plyr.setup('.plyr', {iconUrl: '/css/sprite.svg'});
 </script>
+    
+
+    
+    
+
+
+  
+
+    </div>
+  </div>
+</div>
+
+
+  <!-- 来必力City版安装代码 -->
+<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTI2MS81ODI5">
+	<script type="text/javascript">
+   (function(d, s) {
+       var j, e = d.getElementsByTagName(s)[0];
+
+       if (typeof LivereTower === 'function') { return; }
+
+       j = d.createElement(s);
+       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+       j.async = true;
+
+       e.parentNode.insertBefore(j, e);
+   })(document, 'script');
+	</script>
+<noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+</div>
+<!-- City版安装代码已完成 -->
+
+
+<div id="bottom-outer">
+  
+  <div id="bottom-inner">
+    Corn 
+    ©2019 |Powered by  
+    <a href="http://hexo.io" target="_blank">Hexo</a> with theme 
+    <a href="https://github.com/iHongRen/legend" target="_blank">legend</a>
+  </div>
+    
+    
+    
+      <a href="/atom.xml">
+      
+      <img src="/images/rss.png" height="18" width="18">
+      
+</a></div> 
+
+
+  
+  
+    <script src="/js/legend.js"></script>
+  
+
+
 </body>
 </html>
+
+
+<script>
+$(window).on('load', function(){
+   $('pre').addClass('prettyprint').attr('style', 'overflow:auto;');
+   prettyPrint();
+ });
+</script>
 
