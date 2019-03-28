@@ -16,9 +16,10 @@
   
   
   
-    <meta name="description" content>
+    <meta name="description" content="1.ByteBuf介绍摘抄自掘金小册 Netty入门与实战(by 闪电侠)
+1.1.ByteBuf结构1. ByteBuf是一个字节容器(有三个部分),第一个部分是已经丢弃的字节(数据是无效的),第二部分是可读字节,这部分是ByteBuf的主题数据,从ByteBuf里面读取的数据都来自这一部分。最后一部分是可写字节,所有写到ByteBuf的数据都会写到最后一段。最后虚线部分是指还可扩多少容。...">
   
-  <title>ThreadPool`s Study [ CornWacc`s Blog ]</title>
+  <title>ByteBuf`s Study [ CornWacc`s Blog ]</title>
   
   
     <link rel="shortcut icon" href="/hollow.ico">
@@ -37,22 +38,13 @@
 <body>
 <div class="side-navigate hide-area">
   
-    <div class="item prev">
-      <a href="/2019/03/28/ByteBuf`s Study/">
-        <div class="item-icon"></div>
-      </a>
-      <div class="item-title">
-        ByteBuf`s Study
-      </div>
-    </div>
-  
   
     <div class="item next">
-      <a href="/2019/03/26/Netty`s Study/">
+      <a href="/2019/03/27/ThreadPool`s Study/">
         <div class="item-icon"></div>
       </a>
       <div class="item-title">
-        Netty`s Study
+        ThreadPool`s Study
       </div>
     </div>
   
@@ -108,37 +100,63 @@
   
 
   <article id="post">
-    <h1>ThreadPool`s Study</h1>
+    <h1>ByteBuf`s Study</h1>
     <p class="page-title-sub">
-      <span id="post-title-date">撰写于 2019-03-27</span>
+      <span id="post-title-date">撰写于 2019-03-28</span>
       
-        <span id="post-title-updated">修改于 2019-03-27</span>
+        <span id="post-title-updated">修改于 2019-03-28</span>
       
       
       
     </p>
     
-    
+    <h1 id="1-ByteBuf介绍"><a href="#1-ByteBuf介绍" class="headerlink" title="1.ByteBuf介绍"></a>1.ByteBuf介绍</h1><p><em>摘抄自掘金小册 Netty入门与实战(by 闪电侠)</em><br><img src="https://s2.ax1x.com/2019/03/28/Adfscd.png" alt="&quot;&quot;"></p>
+<h2 id="1-1-ByteBuf结构"><a href="#1-1-ByteBuf结构" class="headerlink" title="1.1.ByteBuf结构"></a>1.1.ByteBuf结构</h2><pre><code>1. ByteBuf是一个字节容器(有三个部分),第一个部分是已经丢弃的字节(数据是无效的),第二部分是可读字节,这部分是ByteBuf的主题数据,从ByteBuf里面读取的数据都来自这一部分。最后一部分是可写字节,所有写到ByteBuf的数据都会写到最后一段。最后虚线部分是指还可扩多少容。
+
+2.readerIndex:当前指针位置,每从ByteBuf中读取一个字节,该参数自增1,ByteBuf里面总共有writerIndex(写入指针)-readerIndex个字节可读,所以当writerIndex等于readerIndex时,ByteBuf不可读。
+
+3.每写一个字节writerIndex增1,直到增加到当前容量(capacity)时,该ByteBuf不可写。如果当前容量不足,可以进行扩容,直到capacity增加到最大容量maxCapacity,当超过最大容量时就会报错。
+
+4.Netty运用ByteBuf这种数据结构可以有效的区分可读可写的数据,读写之间没有冲突。
+</code></pre><h2 id="1-2-ByteBuf-Api"><a href="#1-2-ByteBuf-Api" class="headerlink" title="1.2.ByteBuf Api"></a>1.2.ByteBuf Api</h2><pre><code>1.capacity():用于表示ByteBuf占用了多少字节的内存(丢失的,可读的,可写的)
+
+2.maxCapacity():用于表示该ByteBuf最大能够占用多少内存
+
+3.readableBytes():表示当前可读的字节数(capacity-readerIndex)。
+
+4.isReadable():判断当前ByteBuf是否还可读
+
+5.writableBytes():表示当前可写的字节数(capacity-writerIndex)。
+
+6.isWritable():表示当前ByteBuf是否还可写,如果不可写将会对当前的容量进行扩容,直到扩容到最大容量时不可写
+
+7.maxWritableBytes():表示当前还可写多少字节(maxcapacity-writerIndex)
+
+8.readerIndex:获取当前读取到的字节下标
+  readerIndex(i):获取当前设置指针的ByteBuf抽象
+  writeIndex(),writerIndex(i)同理
+
+9.writeBytes(byte[] b):表示把字节数组的内容写入到ByteBuf里面。
+  readBytes(byte[] red):表示把bytebuf里的字节全部读取到字节数组里。
+</code></pre>
   </article>
   <div class="random-toc-area">
   <button class="btn-hide-toc btn-hide-toc-show" style="display: none" onclick="TOCToggle()">显示目录</button>
   <button class="btn-hide-toc btn-hide-toc-hide" onclick="TOCToggle()">隐藏目录</button>
   <div class="random-toc">
     <h2>目录</h2>
-    
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-ByteBuf介绍"><span class="toc-text">1.ByteBuf介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-ByteBuf结构"><span class="toc-text">1.1.ByteBuf结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-ByteBuf-Api"><span class="toc-text">1.2.ByteBuf Api</span></a></li></ol></li></ol>
   </div>
 </div>
 
   
 <nav id="pagination">
   
-    <a href="/2019/03/28/ByteBuf`s Study/" class="prev">&larr; 上一篇 ByteBuf`s Study</a>
-  
 
   
 
   
-    <a href="/2019/03/26/Netty`s Study/" class="next">下一篇 Netty`s Study &rarr;</a>
+    <a href="/2019/03/27/ThreadPool`s Study/" class="next">下一篇 ThreadPool`s Study &rarr;</a>
   
 </nav>
 
