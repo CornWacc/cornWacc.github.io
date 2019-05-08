@@ -1,0 +1,199 @@
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js">
+</script>
+<link href="/plugins/code-theme/tomorrow.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="/plugins/github-markdown.css">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
+  
+    
+    
+      <link rel="stylesheet" href="/css/legend.css">
+    
+  
+</head>
+
+<body id="body-x">
+<div id="layout-content">
+  <div id="menu-outer-x">
+  <div id="menu-inner">
+    
+    
+    <div id="site-title">
+      CornWacc`s Blog
+    </div>
+    
+
+     
+    <div>
+    
+      
+      <a href="/">Main</a>
+      
+    
+      
+      <a href="/archives">Archives</a>
+      
+    
+    </div>
+  </div>
+</div> 
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article class="markdown-body">
+    <h2 id="post-title">Spring-Beans`s Study
+       
+        <div id="post-time" datetime="2019-05-08T03:16:00.000Z">
+          2019-05-08
+        </div>
+      
+    </h2>
+    <h2 id="1-什么是SpringBean"><a href="#1-什么是SpringBean" class="headerlink" title="1.什么是SpringBean"></a>1.什么是SpringBean</h2><h3 id="1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。"><a href="#1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。" class="headerlink" title="1.1 Spring Bean是被实例的，组装的以及被Spring管理的Java对象。"></a>1.1 Spring Bean是被<strong>实例</strong>的，组装的以及被Spring管理的<strong>Java对象</strong>。</h3><h3 id="1-2-Spring-容器会自动完成-Bean对象的实例化。"><a href="#1-2-Spring-容器会自动完成-Bean对象的实例化。" class="headerlink" title="1.2 Spring 容器会自动完成@Bean对象的实例化。"></a>1.2 Spring 容器会自动完成@Bean对象的实例化。</h3><h2 id="2-Spring-Bean包的内置配置"><a href="#2-Spring-Bean包的内置配置" class="headerlink" title="2.Spring-Bean包的内置配置"></a>2.Spring-Bean包的内置配置</h2><p><img src="https://s2.ax1x.com/2019/05/08/Eyx06s.jpg" alt="&quot;&quot;"></p>
+<h2 id="3-SpringBean中的核心类介绍"><a href="#3-SpringBean中的核心类介绍" class="headerlink" title="3.SpringBean中的核心类介绍"></a>3.SpringBean中的核心类介绍</h2><h3 id="3-1-Spring中有最核心的两个类"><a href="#3-1-Spring中有最核心的两个类" class="headerlink" title="3.1 Spring中有最核心的两个类"></a>3.1 Spring中有最核心的两个类</h3><h4 id="3-1-1-DefaultListableBeanFactory"><a href="#3-1-1-DefaultListableBeanFactory" class="headerlink" title="3.1.1 DefaultListableBeanFactory"></a>3.1.1 DefaultListableBeanFactory</h4><pre><code>该类是整个Bean加载的核心部分，是Spring注册及加载bean的默认实现。它继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory及BeanDefinitionRegistry接口。
+</code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzmBq.jpg" alt></p>
+<pre><code>以下是该类的层次结构图(蓝色为类,绿色为接口)
+</code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzRVP.jpg" alt></p>
+<pre><code>--------------- 类解析(依赖从右往左) ---------------------
+</code></pre><ol>
+<li>AliasRegistry(别名注册接口)</li>
+</ol>
+<ul>
+<li>用于定义对别名的简单增删改等操作</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/05/08/E6lu4S.jpg" alt></p>
+<ol start="2">
+<li>SimpleAliasRegistry(别名的缓存)</li>
+</ol>
+<ul>
+<li>主要使用map作为alias的缓存，并对接口AliasRegistry进行实现</li>
+</ul>
+<ol start="3">
+<li>DefaultSingletonBeanRegistry(单例的操作)</li>
+</ol>
+<ul>
+<li>对接口SingletonBeanRegistry各函数的实现</li>
+</ul>
+<ol start="4">
+<li>SingletonBeanRegistry</li>
+</ol>
+<ul>
+<li>对单例的注册和获取</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/05/08/E6a4Fs.jpg" alt></p>
+<ol start="5">
+<li>FactoryBeanRegistrySupport</li>
+</ol>
+<ul>
+<li>在DefaultSingletonBeanRegistry基础上增加了对FactoryBean的特殊处理功能,对单例的一些操作进行了优化</li>
+</ul>
+<ol start="6">
+<li>AbstractBeanFactory</li>
+</ol>
+<ul>
+<li>综合FactoryBeanRegistrySupport和ConfigurableBeanFactory的功能,<br>主要提供了这样的三个功能: 别名管理,单例创建与注册,工厂方法FactoryBean支持</li>
+</ul>
+<ol start="7">
+<li>BeanFactory</li>
+</ol>
+<ul>
+<li>定义获取Bean及Bean的各种属性。</li>
+</ul>
+<ol start="8">
+<li>HierarchicalBeanFactory</li>
+</ol>
+<ul>
+<li>继承BeanFactory，也就是在BeanFactroy的功能的基础上增加了对parentFactroy的支持</li>
+</ul>
+<ol start="9">
+<li>ConfigurableBeanFactory</li>
+</ol>
+<ul>
+<li>提供配置Factory的各种方法</li>
+</ul>
+<ol start="10">
+<li>AbstractAutowireCapableBeanFactory</li>
+</ol>
+<ul>
+<li>综合AbstractBeanFactory并对接口AutowireCapableBeanFactory进行实现</li>
+</ul>
+
+  </article>
+
+  
+    
+    
+      <div id="page-prev-next">
+        
+        
+          <div></div> 
+        
+
+        
+        
+          <a id="page-next-a" href="/2019/04/02/Spring常用Api/"> Spring常用api → </a>
+        
+      </div>
+    
+    
+    
+    
+      
+      <div id="play-button" style="background-color: gray; border: solid 2px gray;">
+  <img id="play-img" src="/images/playback_play.png">
+</div>
+<audio id="bgaudio" loop="loop" preload="none"> 
+  <source src="http://cdn.calm.com/scenes/scene-Qqkzy9k7Eo.m4a?v=1418162240715" type="audio/mpeg">
+</audio>
+
+<script>
+$(document).ready(function(){
+  //播放按钮点击
+  var audio = $("#bgaudio")[0];
+  var img = $("#play-img")[0];
+  $("#play-button").click(function(){ 
+    if (audio.paused || audio.ended) {
+      audio.play();
+      img.src = "/images/playback_pause.png";
+    } else {
+      audio.pause();
+      img.src = "/images/playback_play.png";
+    }
+  });
+});
+</script>
+    
+
+    
+    
+
+
+  
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+
+<script>
+$(window).on('load', function(){
+   $('pre').addClass('prettyprint').attr('style', 'overflow:auto;');
+   prettyPrint();
+ });
+</script>
+
