@@ -1,0 +1,156 @@
+
+
+
+
+
+
+<!doctype html>
+<html lang="zh-CN">
+
+<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js">
+</script>
+<link href="/plugins/code-theme/tomorrow.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="/plugins/github-markdown.css">
+
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
+  
+    
+    
+      <link rel="stylesheet" href="/css/legend.css">
+    
+  
+</head>
+
+<body id="body-x">
+<div id="layout-content">
+  <div id="menu-outer-x">
+  <div id="menu-inner">
+    
+    
+    <div id="site-title">
+      CornWacc`s Blog
+    </div>
+    
+
+     
+    <div>
+    
+      
+      <a href="/">Main</a>
+      
+    
+      
+      <a href="/archives">Archives</a>
+      
+    
+    </div>
+  </div>
+</div> 
+  <div id="content-outer">
+    <div id="content-inner">
+      
+      
+  <article class="markdown-body">
+    <h2 id="post-title">Spring5新特性之WebFlux
+       
+        <div id="post-time" datetime="2019-05-10T01:04:40.000Z">
+          2019-05-10
+        </div>
+      
+    </h2>
+    <h1 id="传统Servlet模型"><a href="#传统Servlet模型" class="headerlink" title="传统Servlet模型"></a><strong>传统Servlet模型</strong></h1><p><img src="https://upload-images.jianshu.io/upload_images/13238412-64c198ec50d10fad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/930/format/webp" alt></p>
+<ul>
+<li><p>servlet由servlet container进行生命周期管理。container启动时构造servlet对象并调用servlet init()进行初始化；container关闭时调用servlet destory()销毁servlet；container运行时接受请求，并为每个请求分配一个线程（一般从线程池中获取空闲线程）然后调用service()。</p>
+</li>
+<li><p>弊端：<strong><em>servlet是一个简单的网络编程模型，当请求进入servlet container时，servlet container就会为其绑定一个线程</em></strong>，在并发不高的场景下这种模型是适用的，但是一旦并发上升，线程数量就会上涨，而线程资源代价是昂贵的（上线文切换，内存消耗大）严重影响请求的处理时间。在一些简单的业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势。</p>
+</li>
+<li><p><strong><em>spring webmvc是基于servlet之上的一个路由模型</em></strong>，即spring实现了处理所有request请求的一个servlet（DispatcherServlet），并由该servlet进行路由。所以spring webmvc无法摆脱servlet模型的弊端。</p>
+</li>
+</ul>
+<h1 id="WebFlux"><a href="#WebFlux" class="headerlink" title="WebFlux"></a><strong>WebFlux</strong></h1><p><img src="https://upload-images.jianshu.io/upload_images/13238412-10ac20d2bc1037c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p>
+<ul>
+<li>SpringWebFlux是Spring5添加的新功能，WebFlux本省追随当下最火的Reactive Programming而诞生的框架。他替换了久的Servlet模型，用少量的线程处理了request,response io操作,这些线程称为Loop线程，其业务交给响应式编程框架处理，用户可以将业务中阻塞的操作提交到响应式框架的work线程中执行，而不阻塞的操作依然可以在Loop线程中进行处理，大大提高了Loop线程的利用率</li>
+</ul>
+<h1 id="关于WebFlux"><a href="#关于WebFlux" class="headerlink" title="关于WebFlux"></a><strong>关于WebFlux</strong></h1><ul>
+<li><p>WebFlux是一个非阻塞异步的框架，主要有两大优势。</p>
+<ol>
+<li><p>非阻塞式</p>
+<pre><code>在servlet3.1提供了非阻塞的API，WebFlux提供了一种比其更完美的解决方案。使用非阻塞的方式可以利用较小的线程或硬件资源来处理并发进而提高其可伸缩性。
+</code></pre></li>
+<li><p>函数式编程端点</p>
+<pre><code>Spring5必须让你使用java8，那么函数式编程就是java8重要的特点之一，而WebFlux支持函数式编程来定义路由端点处理请求。
+</code></pre></li>
+</ol>
+</li>
+</ul>
+
+  </article>
+
+  
+    
+    
+      <div id="page-prev-next">
+        
+        
+          <div></div> 
+        
+
+        
+        
+          <a id="page-next-a" href="/2019/05/08/Spring-Beans/"> Spring-Beans`s Study → </a>
+        
+      </div>
+    
+    
+    
+    
+      
+      <div id="play-button" style="background-color: gray; border: solid 2px gray;">
+  <img id="play-img" src="/images/playback_play.png">
+</div>
+<audio id="bgaudio" loop="loop" preload="none"> 
+  <source src="http://cdn.calm.com/scenes/scene-Qqkzy9k7Eo.m4a?v=1418162240715" type="audio/mpeg">
+</audio>
+
+<script>
+$(document).ready(function(){
+  //播放按钮点击
+  var audio = $("#bgaudio")[0];
+  var img = $("#play-img")[0];
+  $("#play-button").click(function(){ 
+    if (audio.paused || audio.ended) {
+      audio.play();
+      img.src = "/images/playback_pause.png";
+    } else {
+      audio.pause();
+      img.src = "/images/playback_play.png";
+    }
+  });
+});
+</script>
+    
+
+    
+    
+
+
+  
+
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
+
+
+<script>
+$(window).on('load', function(){
+   $('pre').addClass('prettyprint').attr('style', 'overflow:auto;');
+   prettyPrint();
+ });
+</script>
+

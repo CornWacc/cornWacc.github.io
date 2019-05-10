@@ -61,7 +61,7 @@
       
     </h2>
     <h2 id="1-什么是SpringBean"><a href="#1-什么是SpringBean" class="headerlink" title="1.什么是SpringBean"></a>1.什么是SpringBean</h2><h3 id="1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。"><a href="#1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。" class="headerlink" title="1.1 Spring Bean是被实例的，组装的以及被Spring管理的Java对象。"></a>1.1 Spring Bean是被<strong>实例</strong>的，组装的以及被Spring管理的<strong>Java对象</strong>。</h3><h3 id="1-2-Spring-容器会自动完成-Bean对象的实例化。"><a href="#1-2-Spring-容器会自动完成-Bean对象的实例化。" class="headerlink" title="1.2 Spring 容器会自动完成@Bean对象的实例化。"></a>1.2 Spring 容器会自动完成@Bean对象的实例化。</h3><h2 id="2-Spring-Bean包的内置配置"><a href="#2-Spring-Bean包的内置配置" class="headerlink" title="2.Spring-Bean包的内置配置"></a>2.Spring-Bean包的内置配置</h2><p><img src="https://s2.ax1x.com/2019/05/08/Eyx06s.jpg" alt="&quot;&quot;"></p>
-<h2 id="3-SpringBean中的核心类介绍"><a href="#3-SpringBean中的核心类介绍" class="headerlink" title="3.SpringBean中的核心类介绍"></a>3.SpringBean中的核心类介绍</h2><h3 id="3-1-Spring中有最核心的两个类"><a href="#3-1-Spring中有最核心的两个类" class="headerlink" title="3.1 Spring中有最核心的两个类"></a>3.1 Spring中有最核心的两个类</h3><h4 id="3-1-1-DefaultListableBeanFactory"><a href="#3-1-1-DefaultListableBeanFactory" class="headerlink" title="3.1.1 DefaultListableBeanFactory"></a>3.1.1 DefaultListableBeanFactory</h4><pre><code>该类是整个Bean加载的核心部分，是Spring注册及加载bean的默认实现。它继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory及BeanDefinitionRegistry接口。
+<h2 id="3-SpringBean中的核心类介绍"><a href="#3-SpringBean中的核心类介绍" class="headerlink" title="3.SpringBean中的核心类介绍"></a>3.SpringBean中的核心类介绍</h2><h3 id="3-1-Spring中有最核心的两个类"><a href="#3-1-Spring中有最核心的两个类" class="headerlink" title="3.1 Spring中有最核心的两个类"></a>3.1 Spring中有最核心的两个类</h3><h4 id="3-1-1-Default"><a href="#3-1-1-Default" class="headerlink" title="3.1.1 Default"></a>3.1.1 Default</h4><pre><code>该类是整个Bean加载的核心部分，是Spring注册及加载bean的默认实现。它继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory及BeanDefinitionRegistry接口。
 </code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzmBq.jpg" alt></p>
 <pre><code>以下是该类的层次结构图(蓝色为类,绿色为接口)
 </code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzRVP.jpg" alt></p>
@@ -123,10 +123,34 @@
 <li>提供配置Factory的各种方法</li>
 </ul>
 <ol start="10">
+<li>AutowireCapableBeanFactory</li>
+</ol>
+<ul>
+<li>提供创建Bean，自动注入，初始化以及应用Bean的后处理器</li>
+</ul>
+<ol start="11">
 <li>AbstractAutowireCapableBeanFactory</li>
 </ol>
 <ul>
 <li>综合AbstractBeanFactory并对接口AutowireCapableBeanFactory进行实现</li>
+</ul>
+<ol start="12">
+<li>ListableBeanFactory</li>
+</ol>
+<ul>
+<li>根据各种条件获取bean的配置清单</li>
+</ul>
+<ol start="13">
+<li>ConfigurableListableBeanFactory</li>
+</ol>
+<ul>
+<li>BeanFactory的配置清单，指定忽略类型及接口等</li>
+</ul>
+<ol start="14">
+<li>BeanDefinitionRegistry</li>
+</ol>
+<ul>
+<li>定义对BeanDefinition的各种增删改操作</li>
 </ul>
 
   </article>
@@ -137,7 +161,7 @@
       <div id="page-prev-next">
         
         
-          <div></div> 
+          <a id="page-prev-a" href="/2019/05/10/Spring5新特性-WebFlux/"> ← Spring5新特性之WebFlux </a>
         
 
         
