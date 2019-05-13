@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Corn`Blog</title>
+  
+  <subtitle>为之努力</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://github.com/CornWacc/"/>
+  <updated>2019-05-13T09:27:42.349Z</updated>
+  <id>https://github.com/CornWacc/</id>
+  
+  <author>
+    <name>Corn</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Spring5新特性之WebFlux</title>
+    <link href="https://github.com/CornWacc/2019/05/10/Spring5%E6%96%B0%E7%89%B9%E6%80%A7-WebFlux/"/>
+    <id>https://github.com/CornWacc/2019/05/10/Spring5新特性-WebFlux/</id>
+    <published>2019-05-10T01:04:40.000Z</published>
+    <updated>2019-05-13T09:27:42.349Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="传统Servlet模型"><a href="#传统Servlet模型" class="headerlink" title="传统Servlet模型"></a><strong>传统Servlet模型</strong></h1><p><img src="https://upload-images.jianshu.io/upload_images/13238412-64c198ec50d10fad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/930/format/webp" alt></p><ul><li><p>servlet由servlet container进行生命周期管理。container启动时构造servlet对象并调用servlet init()进行初始化；container关闭时调用servlet destory()销毁servlet；container运行时接受请求，并为每个请求分配一个线程（一般从线程池中获取空闲线程）然后调用service()。</p></li><li><p>弊端：<strong><em>servlet是一个简单的网络编程模型，当请求进入servlet container时，servlet container就会为其绑定一个线程</em></strong>，在并发不高的场景下这种模型是适用的，但是一旦并发上升，线程数量就会上涨，而线程资源代价是昂贵的（上线文切换，内存消耗大）严重影响请求的处理时间。在一些简单的业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势。</p></li><li><p><strong><em>spring webmvc是基于servlet之上的一个路由模型</em></strong>，即spring实现了处理所有request请求的一个servlet（DispatcherServlet），并由该servlet进行路由。所以spring webmvc无法摆脱servlet模型的弊端。</p></li></ul><a id="more"></a><h1 id="WebFlux"><a href="#WebFlux" class="headerlink" title="WebFlux"></a><strong>WebFlux</strong></h1><p><img src="https://upload-images.jianshu.io/upload_images/13238412-10ac20d2bc1037c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt></p><ul><li>SpringWebFlux是Spring5添加的新功能，WebFlux本省追随当下最火的Reactive Programming而诞生的框架。他替换了久的Servlet模型，用少量的线程处理了request,response io操作,这些线程称为Loop线程，其业务交给响应式编程框架处理，用户可以将业务中阻塞的操作提交到响应式框架的work线程中执行，而不阻塞的操作依然可以在Loop线程中进行处理，大大提高了Loop线程的利用率</li></ul><h1 id="关于WebFlux"><a href="#关于WebFlux" class="headerlink" title="关于WebFlux"></a><strong>关于WebFlux</strong></h1><ul><li><p>WebFlux是一个非阻塞异步的框架，主要有两大优势。</p><ol><li><p>非阻塞式</p><pre><code>在servlet3.1提供了非阻塞的API，WebFlux提供了一种比其更完美的解决方案。使用非阻塞的方式可以利用较小的线程或硬件资源来处理并发进而提高其可伸缩性。</code></pre></li><li><p>函数式编程端点</p><pre><code>Spring5必须让你使用java8，那么函数式编程就是java8重要的特点之一，而WebFlux支持函数式编程来定义路由端点处理请求。</code></pre></li></ol></li></ul><h1 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a><strong>Demo</strong></h1><h2 id="1-编写Http请求处理器"><a href="#1-编写Http请求处理器" class="headerlink" title="1.编写Http请求处理器"></a>1.编写Http请求处理器</h2><p><img src="https://s2.ax1x.com/2019/05/10/E2T4JJ.jpg" alt></p><h2 id="2-编写路由"><a href="#2-编写路由" class="headerlink" title="2.编写路由"></a>2.编写路由</h2><p><img src="https://s2.ax1x.com/2019/05/10/E27jBV.jpg" alt></p><h2 id="3-SpringBoot的启动类-这个就不贴图了-但是需要开启对WebFlux的支持"><a href="#3-SpringBoot的启动类-这个就不贴图了-但是需要开启对WebFlux的支持" class="headerlink" title="3.SpringBoot的启动类(这个就不贴图了,但是需要开启对WebFlux的支持)"></a>3.SpringBoot的启动类(这个就不贴图了,但是需要开启对WebFlux的支持)</h2><h2 id="4-此处在日志中会现实表示路由新建成功"><a href="#4-此处在日志中会现实表示路由新建成功" class="headerlink" title="4.此处在日志中会现实表示路由新建成功"></a>4.此处在日志中会现实表示路由新建成功</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">05</span>-<span class="number">10</span> <span class="number">10</span>:<span class="number">53</span>:<span class="number">09.626</span>  INFO <span class="number">82487</span> --- [           main] o.s.w.r.f.s.s.RouterFunctionMapping      : Mapped ((GET &amp;&amp; /hello) &amp;&amp; Accept: [text/plain]) -&gt; com.corn.spring.webflux.flux.FluxRouter$$Lambda$<span class="number">214</span>/<span class="number">332365138</span>@<span class="number">40</span>cb698e</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;传统Servlet模型&quot;&gt;&lt;a href=&quot;#传统Servlet模型&quot; class=&quot;headerlink&quot; title=&quot;传统Servlet模型&quot;&gt;&lt;/a&gt;&lt;strong&gt;传统Servlet模型&lt;/strong&gt;&lt;/h1&gt;&lt;p&gt;&lt;img src=&quot;https://upload-images.jianshu.io/upload_images/13238412-64c198ec50d10fad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/930/format/webp&quot; alt&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;servlet由servlet container进行生命周期管理。container启动时构造servlet对象并调用servlet init()进行初始化；container关闭时调用servlet destory()销毁servlet；container运行时接受请求，并为每个请求分配一个线程（一般从线程池中获取空闲线程）然后调用service()。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;弊端：&lt;strong&gt;&lt;em&gt;servlet是一个简单的网络编程模型，当请求进入servlet container时，servlet container就会为其绑定一个线程&lt;/em&gt;&lt;/strong&gt;，在并发不高的场景下这种模型是适用的，但是一旦并发上升，线程数量就会上涨，而线程资源代价是昂贵的（上线文切换，内存消耗大）严重影响请求的处理时间。在一些简单的业务场景下，不希望为每个request分配一个线程，只需要1个或几个线程就能应对极大并发的请求，这种业务场景下servlet模型没有优势。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;&lt;em&gt;spring webmvc是基于servlet之上的一个路由模型&lt;/em&gt;&lt;/strong&gt;，即spring实现了处理所有request请求的一个servlet（DispatcherServlet），并由该servlet进行路由。所以spring webmvc无法摆脱servlet模型的弊端。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spring-Beans`s Study</title>
+    <link href="https://github.com/CornWacc/2019/05/08/Spring-Beans/"/>
+    <id>https://github.com/CornWacc/2019/05/08/Spring-Beans/</id>
+    <published>2019-05-08T03:16:00.000Z</published>
+    <updated>2019-05-13T09:29:09.035Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1-什么是SpringBean"><a href="#1-什么是SpringBean" class="headerlink" title="1.什么是SpringBean"></a>1.什么是SpringBean</h2><h3 id="1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。"><a href="#1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。" class="headerlink" title="1.1 Spring Bean是被实例的，组装的以及被Spring管理的Java对象。"></a>1.1 Spring Bean是被<strong>实例</strong>的，组装的以及被Spring管理的<strong>Java对象</strong>。</h3><h3 id="1-2-Spring-容器会自动完成-Bean对象的实例化。"><a href="#1-2-Spring-容器会自动完成-Bean对象的实例化。" class="headerlink" title="1.2 Spring 容器会自动完成@Bean对象的实例化。"></a>1.2 Spring 容器会自动完成@Bean对象的实例化。</h3><h2 id="2-Spring-Bean包的内置配置"><a href="#2-Spring-Bean包的内置配置" class="headerlink" title="2.Spring-Bean包的内置配置"></a>2.Spring-Bean包的内置配置</h2><a id="more"></a><p><img src="https://s2.ax1x.com/2019/05/08/Eyx06s.jpg" alt="&quot;&quot;"></p><h2 id="3-SpringBean中的核心类介绍"><a href="#3-SpringBean中的核心类介绍" class="headerlink" title="3.SpringBean中的核心类介绍"></a>3.SpringBean中的核心类介绍</h2><h3 id="3-1-Spring中有最核心的两个类"><a href="#3-1-Spring中有最核心的两个类" class="headerlink" title="3.1 Spring中有最核心的两个类"></a>3.1 Spring中有最核心的两个类</h3><h4 id="3-1-1-Default"><a href="#3-1-1-Default" class="headerlink" title="3.1.1 Default"></a>3.1.1 Default</h4><pre><code>该类是整个Bean加载的核心部分，是Spring注册及加载bean的默认实现。它继承了AbstractAutowireCapableBeanFactory并实现了ConfigurableListableBeanFactory及BeanDefinitionRegistry接口。</code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzmBq.jpg" alt></p><pre><code>以下是该类的层次结构图(蓝色为类,绿色为接口)</code></pre><p><img src="https://s2.ax1x.com/2019/05/08/EyzRVP.jpg" alt></p><pre><code>--------------- 类解析(依赖从右往左) ---------------------</code></pre><ol><li>AliasRegistry(别名注册接口)</li></ol><ul><li>用于定义对别名的简单增删改等操作</li></ul><p><img src="https://s2.ax1x.com/2019/05/08/E6lu4S.jpg" alt></p><ol start="2"><li>SimpleAliasRegistry(别名的缓存)</li></ol><ul><li>主要使用map作为alias的缓存，并对接口AliasRegistry进行实现</li></ul><ol start="3"><li>DefaultSingletonBeanRegistry(单例的操作)</li></ol><ul><li>对接口SingletonBeanRegistry各函数的实现</li></ul><ol start="4"><li>SingletonBeanRegistry</li></ol><ul><li>对单例的注册和获取</li></ul><p><img src="https://s2.ax1x.com/2019/05/08/E6a4Fs.jpg" alt></p><ol start="5"><li>FactoryBeanRegistrySupport</li></ol><ul><li>在DefaultSingletonBeanRegistry基础上增加了对FactoryBean的特殊处理功能,对单例的一些操作进行了优化</li></ul><ol start="6"><li>AbstractBeanFactory</li></ol><ul><li>综合FactoryBeanRegistrySupport和ConfigurableBeanFactory的功能,<br>主要提供了这样的三个功能: 别名管理,单例创建与注册,工厂方法FactoryBean支持</li></ul><ol start="7"><li>BeanFactory</li></ol><ul><li>定义获取Bean及Bean的各种属性。</li></ul><ol start="8"><li>HierarchicalBeanFactory</li></ol><ul><li>继承BeanFactory，也就是在BeanFactroy的功能的基础上增加了对parentFactroy的支持</li></ul><ol start="9"><li>ConfigurableBeanFactory</li></ol><ul><li>提供配置Factory的各种方法</li></ul><ol start="10"><li>AutowireCapableBeanFactory</li></ol><ul><li>提供创建Bean，自动注入，初始化以及应用Bean的后处理器</li></ul><ol start="11"><li>AbstractAutowireCapableBeanFactory</li></ol><ul><li>综合AbstractBeanFactory并对接口AutowireCapableBeanFactory进行实现</li></ul><ol start="12"><li>ListableBeanFactory</li></ol><ul><li>根据各种条件获取bean的配置清单</li></ul><ol start="13"><li>ConfigurableListableBeanFactory</li></ol><ul><li>BeanFactory的配置清单，指定忽略类型及接口等</li></ul><ol start="14"><li>BeanDefinitionRegistry</li></ol><ul><li>定义对BeanDefinition的各种增删改操作</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;1-什么是SpringBean&quot;&gt;&lt;a href=&quot;#1-什么是SpringBean&quot; class=&quot;headerlink&quot; title=&quot;1.什么是SpringBean&quot;&gt;&lt;/a&gt;1.什么是SpringBean&lt;/h2&gt;&lt;h3 id=&quot;1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。&quot;&gt;&lt;a href=&quot;#1-1-Spring-Bean是被实例的，组装的以及被Spring管理的Java对象。&quot; class=&quot;headerlink&quot; title=&quot;1.1 Spring Bean是被实例的，组装的以及被Spring管理的Java对象。&quot;&gt;&lt;/a&gt;1.1 Spring Bean是被&lt;strong&gt;实例&lt;/strong&gt;的，组装的以及被Spring管理的&lt;strong&gt;Java对象&lt;/strong&gt;。&lt;/h3&gt;&lt;h3 id=&quot;1-2-Spring-容器会自动完成-Bean对象的实例化。&quot;&gt;&lt;a href=&quot;#1-2-Spring-容器会自动完成-Bean对象的实例化。&quot; class=&quot;headerlink&quot; title=&quot;1.2 Spring 容器会自动完成@Bean对象的实例化。&quot;&gt;&lt;/a&gt;1.2 Spring 容器会自动完成@Bean对象的实例化。&lt;/h3&gt;&lt;h2 id=&quot;2-Spring-Bean包的内置配置&quot;&gt;&lt;a href=&quot;#2-Spring-Bean包的内置配置&quot; class=&quot;headerlink&quot; title=&quot;2.Spring-Bean包的内置配置&quot;&gt;&lt;/a&gt;2.Spring-Bean包的内置配置&lt;/h2&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spring常用api</title>
+    <link href="https://github.com/CornWacc/2019/04/02/Spring%E5%B8%B8%E7%94%A8Api/"/>
+    <id>https://github.com/CornWacc/2019/04/02/Spring常用Api/</id>
+    <published>2019-04-02T09:14:27.000Z</published>
+    <updated>2019-04-30T07:39:14.249Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-上下文加载中bean"><a href="#1-上下文加载中bean" class="headerlink" title="1.上下文加载中bean"></a>1.上下文加载中bean</h1><pre><code>1.AnnotationConfigApplicationContext:从上下文中获取Bean2.AnnotationConfigWebApplicationContext:从一个或多个基于Java的配置累中加载Spring Web上下文3.ClassPathXmlApplicationContext:从类路径下加载xml文件获取bean4.FileSystemXmlApplicationContext:从文件系统下加载xml文件获取bean5.XmlWebApplicationContext:从Web应用下的一个或多个XML配置文件中加载上下文</code></pre><h1 id="2-Bean扫描"><a href="#2-Bean扫描" class="headerlink" title="2.Bean扫描"></a>2.Bean扫描</h1><h2 id="2-1-ClassPathBeanDefinitionScanner"><a href="#2-1-ClassPathBeanDefinitionScanner" class="headerlink" title="2.1.ClassPathBeanDefinitionScanner"></a>2.1.ClassPathBeanDefinitionScanner</h2><h3 id="2-1-1-作用-该类根据提供个基础包名，扫描classpath下与该包名的路径下，找到符合条件的类并注册到spring的BeanDefinition注册器中"><a href="#2-1-1-作用-该类根据提供个基础包名，扫描classpath下与该包名的路径下，找到符合条件的类并注册到spring的BeanDefinition注册器中" class="headerlink" title="2.1.1 作用:该类根据提供个基础包名，扫描classpath下与该包名的路径下，找到符合条件的类并注册到spring的BeanDefinition注册器中"></a>2.1.1 作用:该类根据提供个基础包名，扫描classpath下与该包名的路径下，找到符合条件的类并注册到spring的BeanDefinition注册器中</h3>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h1 id=&quot;1-上下文加载中bean&quot;&gt;&lt;a href=&quot;#1-上下文加载中bean&quot; class=&quot;headerlink&quot; title=&quot;1.上下文加载中bean&quot;&gt;&lt;/a&gt;1.上下文加载中bean&lt;/h1&gt;&lt;pre&gt;&lt;code&gt;1.AnnotationConfigAppl
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>ByteBuf`s Study</title>
+    <link href="https://github.com/CornWacc/2019/03/28/ByteBuf%60s%20Study/"/>
+    <id>https://github.com/CornWacc/2019/03/28/ByteBuf`s Study/</id>
+    <published>2019-03-28T01:04:40.000Z</published>
+    <updated>2019-05-13T09:28:54.289Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-ByteBuf介绍"><a href="#1-ByteBuf介绍" class="headerlink" title="1.ByteBuf介绍"></a>1.ByteBuf介绍</h1><p><em>摘抄自掘金小册 Netty入门与实战(by 闪电侠)</em><br><img src="https://s2.ax1x.com/2019/03/28/Adfscd.png" alt="&quot;&quot;"></p><a id="more"></a><h2 id="1-1-ByteBuf结构"><a href="#1-1-ByteBuf结构" class="headerlink" title="1.1.ByteBuf结构"></a>1.1.ByteBuf结构</h2><pre><code>1. ByteBuf是一个字节容器(有三个部分),第一个部分是已经丢弃的字节(数据是无效的),第二部分是可读字节,这部分是ByteBuf的主题数据,从ByteBuf里面读取的数据都来自这一部分。最后一部分是可写字节,所有写到ByteBuf的数据都会写到最后一段。最后虚线部分是指还可扩多少容。2.readerIndex:当前指针位置,ByteBuf每读取一个字节,该参数自增1,ByteBuf里面总共有writerIndex(写入指针)-readerIndex个字节可读,所以当writerIndex等于readerIndex时,ByteBuf不可读。3.每写一个字节writerIndex增1,直到增加到当前容量(capacity)时,该ByteBuf不可写。如果当前容量不足,可以进行扩容,直到capacity增加到最大容量maxCapacity,当超过最大容量时就会报错。4.Netty运用ByteBuf这种数据结构可以有效的区分可读可写的数据,读写之间没有冲突。</code></pre><h2 id="1-2-ByteBuf-Api"><a href="#1-2-ByteBuf-Api" class="headerlink" title="1.2.ByteBuf Api"></a>1.2.ByteBuf Api</h2><pre><code>1.capacity():用于表示ByteBuf占用了多少字节的内存(丢失的,可读的,可写的)2.maxCapacity():用于表示该ByteBuf最大能够占用多少内存3.readableBytes():表示当前可读的字节数(capacity-readerIndex)。4.isReadable():判断当前ByteBuf是否还可读5.writableBytes():表示当前可写的字节数(capacity-writerIndex)。6.isWritable():表示当前ByteBuf是否还可写,如果不可写将会对当前的容量进行扩容,直到扩容到最大容量时不可写7.maxWritableBytes():表示当前还可写多少字节(maxcapacity-writerIndex)8.readerIndex:获取当前读取到的字节下标  readerIndex(i):获取当前设置指针的ByteBuf抽象  writeIndex(),writerIndex(i)同理9.writeBytes(byte[] b):表示把字节数组的内容写入到ByteBuf里面。  readBytes(byte[] red):表示把bytebuf里的字节全部读取到字节数组里。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;1-ByteBuf介绍&quot;&gt;&lt;a href=&quot;#1-ByteBuf介绍&quot; class=&quot;headerlink&quot; title=&quot;1.ByteBuf介绍&quot;&gt;&lt;/a&gt;1.ByteBuf介绍&lt;/h1&gt;&lt;p&gt;&lt;em&gt;摘抄自掘金小册 Netty入门与实战(by 闪电侠)&lt;/em&gt;&lt;br&gt;&lt;img src=&quot;https://s2.ax1x.com/2019/03/28/Adfscd.png&quot; alt=&quot;&amp;quot;&amp;quot;&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>线程池`s Study</title>
+    <link href="https://github.com/CornWacc/2019/03/27/ThreadPool%60s%20Study/"/>
+    <id>https://github.com/CornWacc/2019/03/27/ThreadPool`s Study/</id>
+    <published>2019-03-27T09:14:27.000Z</published>
+    <updated>2019-05-13T09:29:17.195Z</updated>
+    
+    <content type="html"><![CDATA[<a id="more"></a>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Netty`s Study</title>
+    <link href="https://github.com/CornWacc/2019/03/26/Netty%60s%20Study/"/>
+    <id>https://github.com/CornWacc/2019/03/26/Netty`s Study/</id>
+    <published>2019-03-26T08:30:27.000Z</published>
+    <updated>2019-05-13T09:29:00.606Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="1-Netty是什么"><a href="#1-Netty是什么" class="headerlink" title="1.Netty是什么"></a>1.Netty是什么</h1><h3 id="Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。"><a href="#Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。" class="headerlink" title="Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。"></a>Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。</h3><hr><a id="more"></a><h1 id="2-为什么不用原生自带的NIO"><a href="#2-为什么不用原生自带的NIO" class="headerlink" title="2.为什么不用原生自带的NIO"></a>2.为什么不用原生自带的NIO</h1><pre><code>1.使用JDK自带的NIO需要了解太多的概念,编程复杂。2.Netty底层的IO模型随意切换。3.Netty自带拆包解包,异常监测4.Netty解决了很逗JDK包括空轮询的Bug5.自带各种协议栈6.Netty底层对线程,selector做了很多细小的优化,精心设计的reactor线程模型做到非常高效的并发处理7.Netty的健壮性非常强大</code></pre><hr><h1 id="3-Netty实现服务端"><a href="#3-Netty实现服务端" class="headerlink" title="3.Netty实现服务端"></a>3.Netty实现服务端</h1><p><img src="https://s2.ax1x.com/2019/03/27/AalVwF.jpg" alt></p><h2 id="3-1-启动流程"><a href="#3-1-启动流程" class="headerlink" title="3.1.启动流程"></a>3.1.启动流程</h2><pre><code>1).首先创建了两个NioEventLoogGroup,这两个对象可以看做是传统IO变成模型的两个线程组,boss表示端口监听,worker表示处理每一条连接数据的读写的线程组。2).ServerBootStrap:引导类,这个类将引导我们进行服务端的启动工作3). .group是给引导类配置两大线程组,这样引导类的线程模型也就定型了4). .channel(指定IO模型):    NioServerSocketChannel Nio模型    OioServerSocketChannel Bio模型5). .childHandler方法:给引导类创建一个ChannelInitializer用于定义后续每条连接的数据读写,业务处理逻辑。    ChannelInitializer:这个类中需定义一个泛型参数,为定义主通道处理器,对Nio的连接抽象。6).最后操作时可以绑定端口号:serverBootstrap.bind(自定义端口号),此方法是异步的。可以拓展为端口递增绑定7). 附上(Bio引导设置):</code></pre><p><img src="https://s2.ax1x.com/2019/03/27/Aa1BC9.jpg" alt></p><h2 id="3-2-总结-要启动一个Netty服务端必须要指定三类属性"><a href="#3-2-总结-要启动一个Netty服务端必须要指定三类属性" class="headerlink" title="3.2.总结:要启动一个Netty服务端必须要指定三类属性"></a>3.2.总结:要启动一个Netty服务端必须要指定三类属性</h2><pre><code>1.线程模型(监听线程组,读写处理逻辑线程组)2.IO模型(Nio,Bio)3.连续读写处理逻辑</code></pre><hr><h1 id="4-Netty实现客户端"><a href="#4-Netty实现客户端" class="headerlink" title="4.Netty实现客户端"></a>4.Netty实现客户端</h1><p><img src="https://s2.ax1x.com/2019/03/27/Aa3Rs0.jpg" alt></p><h2 id="4-1-启动流程"><a href="#4-1-启动流程" class="headerlink" title="4.1.启动流程"></a>4.1.启动流程</h2><pre><code>1.和服务端启动类似(定义线程组,定义io模型,定义io处理模型处理逻辑)2.Bootstrap:客户端的引导类负责客户端以及连接服务端3.connect方法:用于连接,这个方法有两个参数(Ip/域名,端口号),这个方法也是一个异步。可以通过addListener方法监听连接是否成功。</code></pre><hr><h1 id="5-Netty实现双向通信"><a href="#5-Netty实现双向通信" class="headerlink" title="5.Netty实现双向通信"></a>5.Netty实现双向通信</h1><pre><code>1.上述已经讲了Netty怎么实现两个端的建立,需要实现两端通信则只需要在IO读写逻辑(ChannelInitializer)中进行相关的逻辑操作。</code></pre><h2 id="5-1-服务端读取写入"><a href="#5-1-服务端读取写入" class="headerlink" title="5.1 服务端读取写入"></a>5.1 服务端读取写入</h2><p><img src="https://s2.ax1x.com/2019/03/27/AavCZD.jpg" alt="&quot;&quot;"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 服务端自定义逻辑处理器</span><br><span class="line"> * 1.需继承实现了ChannelHandler该接口的类,此处运用的是ChannelInboundHandlerAdapter</span><br><span class="line"> *</span><br><span class="line"> * 方法解释：</span><br><span class="line"> * 1.channelRead:该方法是在接收到客户端发来的数据后被回调</span><br><span class="line"> * 2.writeAndFlush:写出二进制</span><br><span class="line"> * */</span><br><span class="line"></span><br><span class="line">public class FirstServerHandler extends ChannelInboundHandlerAdapter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext channelHandlerContext, Object s)&#123;</span><br><span class="line">        //读取客户端信息</span><br><span class="line">        System.out.println(&quot;接受到客户端消息:&quot;+new Date()+&quot;:&quot;+s);</span><br><span class="line"></span><br><span class="line">        //写出数据</span><br><span class="line">        System.out.println(new Date()+&quot;服务端写出数据:&quot;);</span><br><span class="line">        ByteBuf byteBuf = getByteBuf(channelHandlerContext);</span><br><span class="line"></span><br><span class="line">        //数据写出</span><br><span class="line">        channelHandlerContext.writeAndFlush(byteBuf);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ByteBuf getByteBuf(ChannelHandlerContext ctx)&#123;</span><br><span class="line">        //获取ByteBuf抽象,生成一个ByteBuf</span><br><span class="line">        ByteBuf byteBuf = ctx.alloc().buffer();</span><br><span class="line"></span><br><span class="line">        try&#123;</span><br><span class="line">            byte[] bytes = &quot;欢迎连接!&quot;.getBytes(&quot;utf-8&quot;);</span><br><span class="line">            //填充ByteBuf</span><br><span class="line">            byteBuf.writeBytes(bytes);</span><br><span class="line">        &#125;catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return byteBuf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="5-2-客户端读取写入"><a href="#5-2-客户端读取写入" class="headerlink" title="5.2 客户端读取写入"></a>5.2 客户端读取写入</h2><p><img src="https://s2.ax1x.com/2019/03/27/AavfTe.jpg" alt="&quot;&quot;"></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 自定义客户端读写逻辑处理器</span><br><span class="line"> * */</span><br><span class="line">public class FirstClientHandler extends ChannelInboundHandlerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 这个方法会在客户端建立连接成功后被调用</span><br><span class="line">     * */</span><br><span class="line">    @Override</span><br><span class="line">    public void channelActive(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        System.out.println(new Date() + &quot;:客户端写出数据:&quot;);</span><br><span class="line"></span><br><span class="line">        //1.获取数据</span><br><span class="line">        ByteBuf byteBuf = getByteBuf(ctx);</span><br><span class="line"></span><br><span class="line">        //2.写出</span><br><span class="line">        ctx.channel().writeAndFlush(byteBuf);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span><br><span class="line">        ByteBuf byteBuf = (ByteBuf) msg;</span><br><span class="line">        System.out.println(&quot;获取到服务器端信息:&quot;+byteBuf.toString(Charset.forName(&quot;UTF-8&quot;)));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ByteBuf getByteBuf(ChannelHandlerContext ctx) throws UnsupportedEncodingException &#123;</span><br><span class="line">        //1.获取二进制抽象 ByteBuf ctx.alloc方法是获取一个ByteBuf的内存管理器</span><br><span class="line">        ByteBuf byteBuf = ctx.alloc().buffer();</span><br><span class="line"></span><br><span class="line">        //2.准备数据,指定字符串的字符集为UTF-8</span><br><span class="line">        byte[] bytes = &quot;你好&quot;.getBytes(&quot;UTF-8&quot;);</span><br><span class="line"></span><br><span class="line">        //3.填充数据到 ByteBuf</span><br><span class="line">        byteBuf.writeBytes(bytes);</span><br><span class="line"></span><br><span class="line">        return byteBuf;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6.总结"></a>6.总结</h1><pre><code>1.在客户端和服务端的逻辑处理都是在启动的时候,通过给逻辑处理链pipeline添加逻辑处理器,用于便携数据的读写逻辑。2.在客户端连接成功后回调逻辑处理器的channelActive()方法。3.无论是服务端还是客户端收到数据后都会调用channelRead方法。4.写数据需调用writeAndFlush方法,客户端与服务端交互的二进制数据载体为ByteBuf,ByteBuf通过连接的内存管理器创建,字节数据填充到ByteBuf之后才能写到对端。</code></pre>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;1-Netty是什么&quot;&gt;&lt;a href=&quot;#1-Netty是什么&quot; class=&quot;headerlink&quot; title=&quot;1.Netty是什么&quot;&gt;&lt;/a&gt;1.Netty是什么&lt;/h1&gt;&lt;h3 id=&quot;Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。&quot;&gt;&lt;a href=&quot;#Netty封装了JDK的NIO-是一个异步事件驱动的网络应用框架-用于快速开发可维护的高性能服务器和客户端。&quot; class=&quot;headerlink&quot; title=&quot;Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。&quot;&gt;&lt;/a&gt;Netty封装了JDK的NIO,是一个异步事件驱动的网络应用框架,用于快速开发可维护的高性能服务器和客户端。&lt;/h3&gt;&lt;hr&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
